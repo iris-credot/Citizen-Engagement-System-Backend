@@ -14,7 +14,7 @@ const AllRoutes = require('./Routes/app');
 
 app.use(express.json());
 app.use(cookieParser());
-app.use('/mvp', swaggerUi.serve, swaggerUi.setup(swagger))
+app.use('/api-system', swaggerUi.serve, swaggerUi.setup(swagger))
 
 mongoose.connect(connection)
 .then(() => {
