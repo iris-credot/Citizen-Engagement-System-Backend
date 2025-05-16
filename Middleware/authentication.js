@@ -34,23 +34,6 @@ const requireAuth = {
     next();
   },
 
-  agencyJWT: async (req, res, next) => {
-    const token = extractToken(req);
-    if (!token) return res.status(401).json({ error: 'Authentication required. Please log in.' });
-
-    const decoded = verifyToken(token, res);
-    if (!decoded) return;
-
-    if (decoded.role !== 'agency') {
-      return res.status(401).json({ error: 'You are not authorized to access this route.' });
-    }
-
-    req.userId = decoded.userId;
-    req.role = decoded.role;
-    req.username = decoded.username;
-    next();
-  },
-
   adminJWT: async (req, res, next) => {
     const token = extractToken(req);
     if (!token) return res.status(401).json({ error: 'Authentication required. Please log in.' });
@@ -68,6 +51,23 @@ const requireAuth = {
     next();
   },
 
+  superAdminJWT: async (req, res, next) => {
+    const token = extractToken(req);
+    if (!token) return res.status(401).json({ error: 'Authentication required. Please log in.' });
+
+    const decoded = verifyToken(token, res);
+    if (!decoded) return;
+
+    if (decoded.role !== 'super-admin') {
+      return res.status(401).json({ error: 'You are not authorized to access this route.' });
+    }
+
+    req.userId = decoded.userId;
+    req.role = decoded.role;
+    req.username = decoded.username;
+    next();
+  },
+
   BothJWT: async (req, res, next) => {
     const token = extractToken(req);
     if (!token) return res.status(401).json({ error: 'Authentication required. Please log in.' });
@@ -75,7 +75,7 @@ const requireAuth = {
     const decoded = verifyToken(token, res);
     if (!decoded) return;
 
-    if (!['agency', 'admin'].includes(decoded.role)) {
+    if (!['admin', 'super-admin'].includes(decoded.role)) {
       return res.status(401).json({ error: 'You are not authorized to access this route.' });
     }
 

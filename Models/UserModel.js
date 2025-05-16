@@ -44,14 +44,14 @@ dateOfBirth:{ type:Date},
   },
   role: {
     type: String,
-    enum: ['citizen', 'agency', 'admin'],
+    enum: ['citizen', 'admin', 'super-admin'],
     default: 'citizen'
   },
   agency_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Agency',  // Reference to Agency collection
     required: function() {
-      return this.role === 'agency';
+      return this.role === 'admin';
     },
     default: null
   },

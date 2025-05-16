@@ -26,7 +26,7 @@ const complaintSchema = new mongoose.Schema({
     required: [true, 'Description is required']
   },
   attachments: {
-    type: [String], // Array of file URLs (e.g., image/pdf links)
+    type: [String], 
     default: []
   },
   status: {
