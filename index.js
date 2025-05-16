@@ -10,7 +10,7 @@ const port = process.env.PORT ;
 const app = express();
 const swagger = require('./swagger.json');
 const errorHandling = require('./Middleware/errorHandler');
-//const AllRoutes = require('./Routes/app');
+const AllRoutes = require('./Routes/app');
 
 app.use(express.json());
 app.use(cookieParser());
@@ -25,7 +25,7 @@ mongoose.connect(connection)
 })
 .catch((err) => console.log(err));
 
- //app.use('/api', AllRoutes);
+ app.use('/api', AllRoutes);
 app.use(errorHandling);
 
 

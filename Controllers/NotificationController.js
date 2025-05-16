@@ -44,43 +44,14 @@ const notificationController = {
   }),
 
   getNotificationsByUser: asyncWrapper(async (req, res, next) => {
-    const { userId } = req.params;
-    const notifications = await Notification.find({ user_id: userId });
+    const { id } = req.params;
+    const notifications = await Notification.find({ user_id: id });
 
     if (!notifications.length) {
-      return next(new NotFound(`No notifications found for user ID ${userId}`));
+      return next(new NotFound(`No notifications found for user ID ${id}`));
     }
 
     res.status(200).json({ notifications });
-  }),
-
-  resendNotification: asyncWrapper(async (req, res, next) => {
-    const { id } = req.params;
-    const notification = await Notification.findById(id).populate('user_id');
-
-    if (!notification) {
-      return next(new NotFound(`No notification found with ID ${id}`));
-    }
-
-    if (!notification.user_id.email) {
-      return next(new BadRequest('User email not found.'));
-    }
-
-    try {
-      await sendEmail({
-        to: notification.user_id.email,
-        subject: 'Resent Notification',
-        text: notification.message
-      });
-
-      notification.status = 'sent';
-    } catch (err) {
-      notification.status = 'failed';
-      return next(new BadRequest('Resending email failed.'));
-    }
-
-    await notification.save();
-    res.status(200).json({ message: 'Notification resent successfully', notification });
   })
 };
 

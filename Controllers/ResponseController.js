@@ -117,9 +117,9 @@ const responseController = {
 
   // Get responses by complaint
   getResponsesByComplaint: asyncWrapper(async (req, res, next) => {
-    const { complaintId } = req.params;
+    const { id } = req.params;
 
-    const responses = await Response.find({ complaint_id: complaintId })
+    const responses = await Response.find({ complaint_id: id })
       .populate('responder_id', '-password');
 
     if (!responses.length) {
@@ -131,9 +131,9 @@ const responseController = {
 
   // Get responses by responder (admin/staff)
   getResponsesByResponder: asyncWrapper(async (req, res, next) => {
-    const { responderId } = req.params;
+    const { id } = req.params;
 
-    const responses = await Response.find({ responder_id: responderId })
+    const responses = await Response.find({ responder_id: id })
       .populate('complaint_id');
 
     if (!responses.length) {
