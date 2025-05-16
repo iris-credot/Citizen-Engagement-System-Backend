@@ -6,14 +6,13 @@ A Node.js + Express REST API for managing citizen engagement processes including
 
 ## 📂 Project Structure
 
-/Controllers - Business logic for each module
-/Middleware - Auth, validation, and utility middlewares
-/Error - Handled all kinds of errors(Notfound, BadRequest etc.)
-/Middleware - Managed the asynchronisation, authentication etc.
-/Models - Mongoose schemas (User, Complaint, Agency, etc.)
-/Routes - Express route handlers
-/uploads - For user images
-/index Has my datase, swagger, routes
+/Controllers     → Business logic for each module (User, Complaint, Agency, etc.)
+/Middleware      → Authentication, validation, async handling, and utility middlewares
+/Error           → Centralized error handling (e.g., NotFound, BadRequest)
+/Models          → Mongoose schemas (User, Complaint, Agency, etc.)
+/Routes          → Express route definitions and handlers
+/uploads         → Directory for storing user-uploaded images (e.g., profile pictures)
+/index.js        → Entry point: connects database, sets up routes, and configures Swagger
 
 yaml
 Copy
@@ -91,13 +90,15 @@ bash
 Copy
 Edit
 npm run dev
-📘 API Documentation
-Swagger is available at:
+
+
+## 📘 API Documentation
+Swagger is available at:https://citizen-engagement-system-backend.onrender.com/api-system
 
 bash
 Copy
 Edit
-https://citizen-engagement-system-backend.onrender.com/api-system
+
 Use the Swagger UI to test all routes for modules like User, Complaint, Response, Category, Notification, and Agency.
 
 🛠️ Scripts
