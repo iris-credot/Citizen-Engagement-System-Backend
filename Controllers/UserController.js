@@ -80,70 +80,79 @@ const userController ={
     }),
     
     createAdminUser: asyncWrapper(async (req, res, next) => {
-        // Only super-admin can create admin users, make sure to add checkSuperAdmin middleware before this controller
-      
-        const {
-          email,
+      // Only super-admin can create admin users, make sure to add checkSuperAdmin middleware before this controller
+    
+      const {
+        email,
+        username,
+        names,
+        bio,
+        address,
+        phoneNumber,
+        dateOfBirth,
+        password,
+        gender,
+        agency_id // must be provided for admin user
+      } = req.body;
+    
+      const agency = await Agency.findById(agency_id);
+      if (!agency) {
+        return next(new Badrequest('Invalid agency_id: agency not found'));
+      }
+    
+      const normalizedEmail = email.toLowerCase();
+      const foundUser = await userModel.findOne({ email: normalizedEmail });
+      if (foundUser) {
+        return next(new Badrequest("Email already in use"));
+      }
+    
+      const otp = Math.floor(Math.random() * 8000000);
+      const otpExpirationDate = new Date(Date.now() + 5 * 60 * 1000);
+      const images = `ADMIN_IMAGE_${Date.now()}`;
+    
+      try {
+        const ImageCloudinary = await cloudinary.v2.uploader.upload(req.file.path, {
+          folder: 'MVP',
+          public_id: images
+        });
+    
+        const newUser = new userModel({
           username,
-          names,
           bio,
+          names,
+          image: ImageCloudinary.secure_url,
           address,
           phoneNumber,
           dateOfBirth,
+          email: normalizedEmail,
           password,
           gender,
-          agency_id // must be provided for admin user
-        } = req.body;
-      
-        const agency = await Agency.findById(agency_id);
-          if (!agency) {
-  return next(new Badrequest('Invalid agency_id: agency not found'));
-}
-      
-        const normalizedEmail = email.toLowerCase();
-        const foundUser = await userModel.findOne({ email: normalizedEmail });
-        if (foundUser) {
-          return next(new Badrequest("Email already in use"));
-        }
-      
-        const otp = Math.floor(Math.random() * 8000000);
-        const otpExpirationDate = new Date(Date.now() + 5 * 60 * 1000);
-        const images = `ADMIN_IMAGE_${Date.now()}`;
-      
-        try {
-          const ImageCloudinary = await cloudinary.v2.uploader.upload(req.file.path, {
-            folder: 'MVP',
-            public_id: images
-          });
-      
-          const newUser = new userModel({
-            username,
-            bio,
-            names,
-            image: ImageCloudinary.secure_url,
-            address,
-            phoneNumber,
-            dateOfBirth,
-            email: normalizedEmail,
-            password,
-            gender,
-            role: 'admin',
-            agency_id,
-            otp,
-            otpExpires: otpExpirationDate,
-          });
-      
-          const savedUser = await newUser.save();
-      
-          const body = `Your OTP is ${otp}`;
-          await sendEmail(normalizedEmail, "Citizen-Engagement-System: Verify your account", body);
-      
-          res.status(201).json({ user: savedUser, otp });
-        } catch (err) {
-          console.error('Error uploading image to Cloudinary:', err);
-          return next(new Badrequest('Error uploading image to Cloudinary.'));
-        }
-      }),
+          role: 'admin',
+          agency_id,
+          otp,
+          otpExpires: otpExpirationDate,
+        });
+    
+        const savedUser = await newUser.save();
+    
+        // Email with credentials
+        const emailBody = `Hello ${names}, Your Agency Account has been created successfully.
+
+                 Login Credentials:
+                   Email: ${normalizedEmail}
+                   Password: ${password}
+    
+                 Please log in and update your password as soon as possible.`;
+    
+        await sendEmail(normalizedEmail, "Admin Account Created – Citizen Engagement System", emailBody);
+    
+        res.status(201).json({ user: savedUser });
+      } catch (err) {
+        console.error('Error uploading image to Cloudinary:', err);
+        return next(new Badrequest('Error uploading image to Cloudinary.'));
+      }
+    }),
+    
     OTP: asyncWrapper(async(req,res,next) =>{
     
       const foundUser = await userModel.findOne({ otp: req.body.otp });
