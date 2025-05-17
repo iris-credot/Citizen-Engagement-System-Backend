@@ -94,7 +94,7 @@ npm run dev
 
 
 
-## 📘 **API Documentation**
+## 📘 API Documentation
 
 [Swagger Documentation](https://citizen-engagement-system-backend.onrender.com/api-system)
 
@@ -121,7 +121,7 @@ This project is licensed under the MIT License.
 
 ## 👨‍💻 Author
 
-Developed by **Iris Credot**  
+Developed by Iris Credot  
 📧 tetairiscredot@gmail.com  
 
 💡 Tips
@@ -137,7 +137,7 @@ Edit
 
 ---
 
-✅ **Next Step**:  
+✅  Next Step:  
 Save this as `README.md` in the root of your backend project.
 
 
