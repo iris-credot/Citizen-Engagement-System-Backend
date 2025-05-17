@@ -82,7 +82,7 @@
               },
               "/user/login": {
                 "post": {
-                  "tags": ["User"],
+                  "tags": ["Authentication"],
                   "summary": "User login",
                   "requestBody": {
                     "required": true,
@@ -107,7 +107,7 @@
               },
               "/user/forgot": {
                 "post": {
-                  "tags": ["User"],
+                  "tags": ["Authentication"],
                   "summary": "Request password reset",
                   "requestBody": {
                     "required": true,
@@ -130,7 +130,7 @@
               },
               "/user/verifyotp": {
                 "post": {
-                  "tags": ["User"],
+                  "tags": ["Authentication"],
                   "summary": "Verify OTP",
                   "requestBody": {
                     "required": true,
@@ -154,7 +154,7 @@
               },
               "/user/logout": {
                 "post": {
-                  "tags": ["User"],
+                  "tags": ["Authentication"],
                   "summary": "Logout user",
                   "responses": {
                     "200": { "description": "User logged out" }
@@ -256,7 +256,7 @@
               },
               "/user/resetpassword/{token}": {
                 "post": {
-                  "tags": ["User"],
+                  "tags": ["Authentication"],
                   "summary": "Reset password using token",
                   "parameters": [
                     {
