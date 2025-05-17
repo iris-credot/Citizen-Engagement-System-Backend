@@ -96,8 +96,7 @@ npm run dev
 
 ## 📘 **API Documentation**
 
-🔗 **Swagger Documentation**: [https://citizen-engagement-system-backend.onrender.com/api-system](https://citizen-engagement-system-backend.onrender.com/api-system)
-
+[Swagger Documentation](https://citizen-engagement-system-backend.onrender.com/api-system)
 
 bash
 Copy
