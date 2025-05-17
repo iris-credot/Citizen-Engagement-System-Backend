@@ -6,13 +6,14 @@ A Node.js + Express REST API for managing citizen engagement processes including
 
 ## 📂 Project Structure
 
-/Controllers     → Business logic for each module (User, Complaint, Agency, etc.)
-/Middleware      → Authentication, validation, async handling, and utility middlewares
-/Error           → Centralized error handling (e.g., NotFound, BadRequest)
-/Models          → Mongoose schemas (User, Complaint, Agency, etc.)
-/Routes          → Express route definitions and handlers
-/uploads         → Directory for storing user-uploaded images (e.g., profile pictures)
-/index.js        → Entry point: connects database, sets up routes, and configures Swagger
+
+- `/Controllers` – Business logic for each module
+- `/Middleware` – Auth, validation, and utility middlewares
+- `/Error` – Handles all kinds of errors (NotFound, BadRequest, etc.)
+- `/Models` – Mongoose schemas (User, Complaint, Agency, etc.)
+- `/Routes` – Express route handlers
+- `/uploads` – For user images
+- `/index.js` – Initializes database, routes, and Swagger documentation
 
 yaml
 Copy
@@ -92,8 +93,11 @@ Edit
 npm run dev
 
 
-## 📘 API Documentation
-Swagger is available at:https://citizen-engagement-system-backend.onrender.com/api-system
+
+## 📘 **API Documentation**
+
+🔗 **Swagger Documentation**: [https://citizen-engagement-system-backend.onrender.com/api-system](https://citizen-engagement-system-backend.onrender.com/api-system)
+
 
 bash
 Copy
@@ -115,8 +119,11 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 📄 License
 This project is licensed under the MIT License.
 
-🙌 Authors
-Teta Iris Credot – Full-stack Developer
+
+## 👨‍💻 Author
+
+Developed by **Iris Credot**  
+📧 tetairiscredot@gmail.com  
 
 💡 Tips
 ✅ Keep your .env file private.
