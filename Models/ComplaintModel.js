@@ -6,10 +6,26 @@ const complaintSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, 'User is required']
   },
-  category_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
-    required: [true, 'Category is required']
+  // Replaced category_id ref with enum-based category
+  category: {
+    type: String,
+    required: [true, 'Category is required'],
+    enum: [
+      'Roads and Infrastructure',
+      'Water and Sanitation',
+      'Electricity',
+      'Public Safety',
+      'Health Services',
+      'Education',
+      'Waste Management',
+      'Corruption',
+      'Noise Pollution',
+      'Environmental Issues',
+      'Public Transport',
+      'Social Services',
+      'Illegal Construction',
+      'Others'
+    ]
   },
   agency_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -26,7 +42,7 @@ const complaintSchema = new mongoose.Schema({
     required: [true, 'Description is required']
   },
   attachments: {
-    type: [String], 
+    type: [String],
     default: []
   },
   status: {
