@@ -34,10 +34,6 @@ const sendNotification = async ({ user, message, type }) => {
   return notification;
 };
 
-module.exports = sendNotification;
-
-
-
 // Other controller methods
 const notificationController = {
   getAllNotifications: asyncWrapper(async (req, res) => {

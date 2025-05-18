@@ -117,40 +117,72 @@ const complaintController = {
     const { id } = req.params;
     const { status } = req.body;
   
+    // Define allowed status values
     const allowedStatuses = ['new', 'in_progress', 'resolved', 'closed'];
     if (!allowedStatuses.includes(status)) {
       return next(new BadRequest('Invalid status value.'));
     }
   
-    const complaint = await Complaint.findById(id);
+    // Find the complaint and populate user and agency
+    const complaint = await Complaint.findById(id)
+      .populate({ path: 'user_id', model: 'User' })
+      .populate({ path: 'agency_id', model: 'Agency' });
+  
     if (!complaint) {
       return next(new NotFound(`No complaint found with ID ${id}`));
     }
   
-    // Extract user and agency
-    const user_id = complaint.user;
-    const agency_id = complaint.agency;
-  
-    // Update status
+    // Update the complaint's status
     complaint.status = status;
     const updatedComplaint = await complaint.save();
   
-    // Optional: notify user and agency
-    await Promise.all([
-      sendNotification({
-        user: user_id,
-        message: `Your complaint status has been updated to "${status}".`,
-        type: 'complaint',
-      }),
-      sendNotification({
-        user: agency_id, // 'user' not 'users'
-        message: `Complaint assigned to your agency is now "${status}".`,
-        type: 'complaint',
-      }),
-    ]);
+    // Prepare notifications
+    const notifications = [];
   
-    res.status(200).json({ message: 'Status updated successfully', complaint: updatedComplaint });
+    // Notify the user
+    if (complaint.user_id && complaint.user_id._id) {
+      notifications.push(
+        sendNotification({
+          user: complaint.user_id._id,
+          message: `Your complaint status has been updated to "${status}".`,
+          type: 'complaint',
+        })
+      );
+      console.log(`✅ Notification sent to user ${complaint.user_id.email || complaint.user_id._id}`);
+    } else {
+      console.warn(`[WARN] Complaint ${complaint._id} is missing a valid user reference.`);
+    }
+  
+    // Notify the agency (if assigned)
+    if (complaint.agency_id && complaint.agency_id._id) {
+      notifications.push(
+        sendNotification({
+          user: complaint.agency_id._id,
+          message: `A complaint assigned to your agency is now "${status}".`,
+          type: 'complaint',
+        })
+      );
+      console.log(`✅ Notification sent to agency ${complaint.agency_id.name || complaint.agency_id._id}`);
+    } else {
+      console.warn(`[WARN] Complaint ${complaint._id} is not yet assigned to an agency.`);
+    }
+  
+    // Attempt to send all notifications
+    try {
+      await Promise.all(notifications);
+    } catch (error) {
+      console.error('❌ Failed to send notifications:', error.message);
+    }
+  
+    // Return response
+    return res.status(200).json({
+      message: 'Status updated successfully.',
+      complaint: updatedComplaint,
+    });
   }),
+  
+  
+  
   
   // Get complaints by user
   getComplaintsByUser: asyncWrapper(async (req, res, next) => {
