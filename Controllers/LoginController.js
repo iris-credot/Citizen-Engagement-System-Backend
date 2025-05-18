@@ -36,18 +36,17 @@ const login_post = asyncWrapper(async (req, res, next) => {
     });
 
     // Set token in cookie and header
-    const expiryDate = new Date(Date.now() + 24 * 60 * 60 * 1000); // 1 day
     res.setHeader('Authorization', `Bearer ${token}`);
     res.cookie('jwt', token, {
         httpOnly: true,
-        path: '/',
-        expires: expiryDate,
-        secure: true,
-        sameSite: 'Strict'
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Lax',
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
     res.status(200).json({ user, token });
 });
+
 
 const logout = asyncWrapper(async (req, res, next) => {
     const token = req.cookies.jwt;
