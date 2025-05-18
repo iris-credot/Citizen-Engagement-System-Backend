@@ -534,6 +534,16 @@
                   }
                 }
               },
+               "/complaint/getCategories": {
+                "get": {
+                  "tags": ["Complaint"],
+                  "summary": "Get all categories of complaints ",
+                  "security": [{ "Bearer": [] }],
+                  "responses": {
+                    "200": { "description": "List of categories" }
+                  }
+                }
+              },
               "/complaint/filter": {
                 "get": {
                   "tags": ["Complaint"],

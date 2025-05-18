@@ -49,6 +49,26 @@ const complaintController = {
 
     res.status(200).json({ complaints });
   }),
+  getComplaintCategories: asyncWrapper(async (req, res) => {
+  res.status(200).json({
+    categories: [
+      'Roads and Infrastructure',
+      'Water and Sanitation',
+      'Electricity',
+      'Public Safety',
+      'Health Services',
+      'Education',
+      'Waste Management',
+      'Corruption',
+      'Noise Pollution',
+      'Environmental Issues',
+      'Public Transport',
+      'Social Services',
+      'Illegal Construction',
+      'Others',
+    ],
+  });
+}),
 
   // Get a single complaint by ID
   getComplaintById: asyncWrapper(async (req, res, next) => {
