@@ -556,13 +556,23 @@
                   }
                 }
               },
-              "/complaint/by-email": {
+               "/complaint/getOne/{agencyId}": {
                 "get": {
                   "tags": ["Complaint"],
-                  "summary": "Get complaints by email (agency or user)",
+                  "summary": "Get complaints by agency id",
                   "security": [{ "Bearer": [] }],
                   "responses": {
-                    "200": { "description": "Complaints retrieved by email" }
+                    "200": { "description": "Complaints retrieved by agency id" }
+                  }
+                }
+              },
+              "/complaint/getOne/{userId}": {
+                "get": {
+                  "tags": ["Complaint"],
+                  "summary": "Get complaints by user id",
+                  "security": [{ "Bearer": [] }],
+                  "responses": {
+                    "200": { "description": "Complaints retrieved by user id" }
                   }
                 }
               },
