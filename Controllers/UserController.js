@@ -258,7 +258,7 @@ const userController ={
           expirationDate: new Date(Date.now() + 5 * 60 * 1000),
       });
   
-      const link = `http://localhost:5003/auth/reset?token=${token}&id=${foundUser.id}`;
+      const link = `https://citizen-engagement-system-frontend.onrender.com/resetpass?token=${token}&id=${foundUser.id}`;
       const emailBody = `Click on the link bellow to reset your password\n\n${link}`;
   
       await sendEmail(req.body.email, "Reset your password", emailBody);
