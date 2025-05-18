@@ -112,41 +112,46 @@ const complaintController = {
   }),
 
   // Change complaint status
+ 
   changeComplaintStatus: asyncWrapper(async (req, res, next) => {
     const { id } = req.params;
     const { status } = req.body;
-
+  
     const allowedStatuses = ['new', 'in_progress', 'resolved', 'closed'];
     if (!allowedStatuses.includes(status)) {
       return next(new BadRequest('Invalid status value.'));
     }
-
+  
     const complaint = await Complaint.findById(id);
     if (!complaint) {
       return next(new NotFound(`No complaint found with ID ${id}`));
     }
-
+  
+    // Extract user and agency
+    const user_id = complaint.user;
+    const agency_id = complaint.agency;
+  
+    // Update status
     complaint.status = status;
     const updatedComplaint = await complaint.save();
-
-    // Optional: notify user
+  
+    // Optional: notify user and agency
     await Promise.all([
-        await sendNotification({
-            user: user_id,
-            message: `Your complaint status has been updated to "${status}".`,
-            type: 'complaint'
-          }),
-          await sendNotification({
-            users: agency_id, // notify both
-            message: `Your complaint status has been updated to "${status}".`,
-            type: 'complaint'
-          })
-      ]);
-   
-
+      sendNotification({
+        user: user_id,
+        message: `Your complaint status has been updated to "${status}".`,
+        type: 'complaint',
+      }),
+      sendNotification({
+        user: agency_id, // 'user' not 'users'
+        message: `Complaint assigned to your agency is now "${status}".`,
+        type: 'complaint',
+      }),
+    ]);
+  
     res.status(200).json({ message: 'Status updated successfully', complaint: updatedComplaint });
   }),
-
+  
   // Get complaints by user
   getComplaintsByUser: asyncWrapper(async (req, res, next) => {
     const { userId } = req.params;
