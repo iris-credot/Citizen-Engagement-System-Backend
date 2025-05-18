@@ -45,7 +45,6 @@ const complaintController = {
   getAllComplaints: asyncWrapper(async (req, res, next) => {
     const complaints = await Complaint.find()
       .populate('user_id')
-      .populate('category_id')
       .populate('agency_id');
 
     res.status(200).json({ complaints });
