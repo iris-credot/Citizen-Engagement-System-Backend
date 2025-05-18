@@ -13,7 +13,7 @@ const errorHandling = require('./Middleware/errorHandler');
 const AllRoutes = require('./Routes/app');
 
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://citizen-engagement-system-backend.onrender.com'],
+    origin: ['http://localhost:5173', 'https://citizen-engagement-system-frontend.onrender.com'],
     credentials: true
   }));
 app.use(express.json());
