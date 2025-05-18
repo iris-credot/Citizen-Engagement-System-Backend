@@ -21,7 +21,17 @@ const userController ={
         const users = await userModel.find({})
         res.status(200).json({ users })
       }),
-  
+   getUserById: asyncWrapper(async (req, res, next) => {
+    const { id } = req.params;
+    const user = await userModel.findById(id)
+      .populate('agency_id');
+
+    if (!user) {
+      return next(new NotFound(`No user found with ID ${id}`));
+    }
+
+    res.status(200).json({ user });
+  }),
 
       createUser: asyncWrapper(async (req, res, next) => {
         const {
