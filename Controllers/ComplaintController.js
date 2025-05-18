@@ -185,19 +185,15 @@ const complaintController = {
   
   
   // Get complaints by user
-  getComplaintsByUser: asyncWrapper(async (req, res, next) => {
-    const { userId } = req.params;
+getComplaintsByUser: asyncWrapper(async (req, res, next) => {
+  const { userId } = req.params;
 
-    const complaints = await Complaint.find({ user_id: userId })
-      
-      .populate('agency_id');
+  const complaints = await Complaint.find({ user_id: userId })
+    .populate("agency_id");
 
-    if (!complaints.length) {
-      return next(new NotFound(`No complaints found for user ID ${userId}`));
-    }
-
-    res.status(200).json({ complaints });
-  }),
+  // ✅ Don't throw error for empty results
+  return res.status(200).json({ complaints }); // This will return [] if none found
+}),
 
   // Get complaints by agency
   getComplaintsByAgency: asyncWrapper(async (req, res, next) => {
