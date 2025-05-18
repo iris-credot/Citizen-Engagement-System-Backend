@@ -41,16 +41,13 @@ const notificationController = {
     res.status(200).json({ notifications });
   }),
 
-  getNotificationsByUser: asyncWrapper(async (req, res, next) => {
-    const { id } = req.params;
-    const notifications = await Notification.find({ user_id: id });
+ getNotificationsByUser: asyncWrapper(async (req, res, next) => {
+  const { id } = req.params;
+  const notifications = await Notification.find({ user_id: id });
 
-    if (!notifications.length) {
-      return next(new NotFound(`No notifications found for user ID ${id}`));
-    }
-
-    res.status(200).json({ notifications });
-  })
+  // Return 200 OK with empty array if no notifications
+  res.status(200).json({ notifications });
+})
 };
 
 module.exports = {
