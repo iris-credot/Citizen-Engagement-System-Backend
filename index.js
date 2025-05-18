@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
-// const cors = require('cors');
+const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const dotenv= require('dotenv');
 dotenv.config();
@@ -12,6 +12,10 @@ const swagger = require('./swagger.json');
 const errorHandling = require('./Middleware/errorHandler');
 const AllRoutes = require('./Routes/app');
 
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+  }));
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api-system', swaggerUi.serve, swaggerUi.setup(swagger))
