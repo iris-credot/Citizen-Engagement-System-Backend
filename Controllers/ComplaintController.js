@@ -25,12 +25,11 @@ const complaintController = {
 
     const savedComplaint = await complaint.save();
     
-          await sendNotification({
-            user: agency_id, // notify both
-            message: `New Complaint "${description}".`,
+        await sendNotification({
+            user: user_id,
+            message: 'Your complaint has been submitted.',
             type: 'complaint'
           });
-      
     // Optional: Notify agency or user
   
 
