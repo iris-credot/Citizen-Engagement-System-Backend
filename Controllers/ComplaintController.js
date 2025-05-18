@@ -55,7 +55,6 @@ const complaintController = {
     const { id } = req.params;
     const complaint = await Complaint.findById(id)
       .populate('user_id')
-      .populate('category_id')
       .populate('agency_id');
 
     if (!complaint) {
@@ -153,7 +152,7 @@ const complaintController = {
     const { userId } = req.params;
 
     const complaints = await Complaint.find({ user_id: userId })
-      .populate('category_id')
+      
       .populate('agency_id');
 
     if (!complaints.length) {
@@ -168,8 +167,7 @@ const complaintController = {
     const { agencyId } = req.params;
 
     const complaints = await Complaint.find({ agency_id: agencyId })
-      .populate('user_id')
-      .populate('category_id');
+      .populate('user_id');
 
     if (!complaints.length) {
       return next(new NotFound(`No complaints found for agency ID ${agencyId}`));
