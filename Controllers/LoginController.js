@@ -49,20 +49,12 @@ const login_post = asyncWrapper(async (req, res, next) => {
 
 
 const logout = asyncWrapper(async (req, res, next) => {
-    const token = req.cookies.jwt;
-    if (!token) {
-        return res.status(401).json({ error: 'Unauthorized: No token provided' });
-    }
-
-    const secret = process.env.SECRET_KEY;
-    jwt.verify(token, secret, (err) => {
-        if (err) {
-            return res.status(401).json({ error: 'Unauthorized: Invalid token' });
-        } else {
-            res.clearCookie('jwt');
-            res.json({ message: 'Logged out successfully' });
-        }
-    });
+  res.clearCookie('jwt', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'Lax',
+  });
+  res.status(200).json({ message: 'Logged out successfully' });
 });
 
 module.exports = {
