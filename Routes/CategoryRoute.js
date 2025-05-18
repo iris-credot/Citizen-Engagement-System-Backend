@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../Middleware/authentication');
 const categoryController = require('../Controllers/CategoryController');
+const checkAdmin = require('../Middleware/CheckSuperAdmin');
 
 router.post('/create',auth.superAdminJWT, categoryController.createCategory);
 router.get('/getall', auth.AuthJWT,categoryController.getAllCategories);

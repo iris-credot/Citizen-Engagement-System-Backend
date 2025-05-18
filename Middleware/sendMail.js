@@ -1,4 +1,3 @@
-// sendEmail.js
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
@@ -11,16 +10,21 @@ const transporter = nodemailer.createTransport({
 
 const sendEmail = async (to, subject, body) => {
   try {
-    await transporter.sendMail({
-      from: `"Citizen Engagement System" <${process.env.AUTH_EMAIL}>`,
-      to,
+    
+    if (typeof to !== 'string') {
+      throw new Error(`Invalid recipient email: ${JSON.stringify(to)}`);
+    }
+    const mailOptions = {
+      from: process.env.AUTH_EMAIL,
+      to: to.trim().toLowerCase(), // normalize the email
       subject,
-      text: body,
-    });
-    console.log('Email sent successfully');
-  } catch (error) {
-    console.error('Error sending email:', error.message);
-    throw new Error('Failed to send email');
+      html: body,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`📧 Email sent to ${to}`);
+  } catch (emailErr) {
+    console.warn('❌ Failed to send email:', emailErr.message);
   }
 };
 

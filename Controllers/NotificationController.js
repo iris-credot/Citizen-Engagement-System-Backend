@@ -5,8 +5,7 @@ const NotFound = require('../Error/NotFound');
 const User = require('../Models/UserModel'); // Assuming user has an email field
 const sendEmail = require('../Middleware/sendMail'); // A utility to send email
 
-
-const sendNotification = asyncWrapper(async ({ user, message,type }) => {
+const sendNotification = async ({ user, message, type }) => {
   if (!user || !message) {
     throw new BadRequest('User and message are required.');
   }
@@ -16,15 +15,14 @@ const sendNotification = asyncWrapper(async ({ user, message,type }) => {
     throw new NotFound('User or email not found.');
   }
 
-  const notification = new Notification({ user_id: user, message,type });
+  const notification = new Notification({ user_id: user, message, type });
 
   try {
-    await sendEmail({
-      to: userData.email,
-      subject: `New ${type} notification`,
-      text: message,
-      
-    });
+    await sendEmail(
+      userData.email,
+      `New ${type} notification`,
+      `<p>${message}</p>`
+    );
 
     notification.status = 'sent';
   } catch (error) {
@@ -34,7 +32,11 @@ const sendNotification = asyncWrapper(async ({ user, message,type }) => {
 
   await notification.save();
   return notification;
-});
+};
+
+module.exports = sendNotification;
+
+
 
 // Other controller methods
 const notificationController = {

@@ -23,41 +23,45 @@ const userController ={
       }),
   
 
-    createUser: asyncWrapper(async (req, res, next) => {
-      const {
-        email,
-        username,
-        names,
-        bio,
-        address,
-        phoneNumber,
-        dateOfBirth,
-        password,
-        gender
-      } = req.body;
-    
-      const normalizedEmail = email.toLowerCase();
-   
-      const foundUser = await userModel.findOne({ email:normalizedEmail});
-      if (foundUser) {
+      createUser: asyncWrapper(async (req, res, next) => {
+        const {
+          email,
+          username,
+          names,
+          bio,
+          address,
+          phoneNumber,
+          dateOfBirth,
+          password,
+          gender
+        } = req.body;
+      
+        const normalizedEmail = email.toLowerCase();
+      
+        const foundUser = await userModel.findOne({ email: normalizedEmail });
+        if (foundUser) {
           return next(new Badrequest("Email already in use"));
-      };
-          
-      const otp = Math.floor(Math.random() * 8000000);
-      const otpExpirationDate = new Date(Date.now() + 5 * 60 * 1000); 
-         const images = `IMAGE_${Date.now()}`;
-         try {
+        }
+      
+        const otp = Math.floor(Math.random() * 8000000);
+        const otpExpirationDate = new Date(Date.now() + 5 * 60 * 1000); 
+        const images = `IMAGE_${Date.now()}`;
+      
+        try {
+          //if (!req.file || !req.file.path) {
+         //   return next(new Badrequest("Image file is missing or not uploaded."));
+         // }
+      
           const ImageCloudinary = await cloudinary.v2.uploader.upload(req.file.path, {
             folder: 'MVP',
             public_id: images
           });
-    
+      
           const newUser = new userModel({
             username,
             bio,
             names,
             image: ImageCloudinary.secure_url,
-            profile,
             address,
             phoneNumber,
             dateOfBirth,
@@ -67,17 +71,17 @@ const userController ={
             otp: otp,
             otpExpires: otpExpirationDate,
           });
-    
+      
           const savedUser = await newUser.save();
           const body = `Your OTP is ${otp}`;
-          await sendEmail(req.body.email, "Citizen-Engagement-Sytem:Verify your account", body);
-          
+          await sendEmail(req.body.email, "Citizen-Engagement-System: Verify your account", body);
+      
           res.status(200).json({ user: savedUser, otp: otp });
         } catch (err) {
           console.error('Error uploading image to Cloudinary:', err);
           return next(new Badrequest('Error uploading image to Cloudinary.'));
         }
-    }),
+      }),
     
     createAdminUser: asyncWrapper(async (req, res, next) => {
       // Only super-admin can create admin users, make sure to add checkSuperAdmin middleware before this controller
@@ -136,15 +140,24 @@ const userController ={
         const savedUser = await newUser.save();
     
         // Email with credentials
-        const emailBody = `Hello ${names}, Your Agency Account has been created successfully.
+        const emailBody = `
+        <p>Hello ${names},</p>
+        <p>Your Agency Admin Account has been created successfully in the Citizen Engagement System.</p>
+      
+        <p><strong>Login Credentials:</strong></p>
+        <pre>
+          Email: ${normalizedEmail}
+          Password: ${password}
+        </pre>
+      
+        <p>Please log in and update your password as soon as possible.</p>
+        <p>Thank you.</p>
+      `;
+      
+    
+                 await sendEmail(normalizedEmail, "Admin Account Created – Citizen Engagement System", emailBody);
+                 console.log("Sending email to:", normalizedEmail);
 
-                 Login Credentials:
-                   Email: ${normalizedEmail}
-                   Password: ${password}
-    
-                 Please log in and update your password as soon as possible.`;
-    
-        await sendEmail(normalizedEmail, "Admin Account Created – Citizen Engagement System", emailBody);
     
         res.status(201).json({ user: savedUser });
       } catch (err) {

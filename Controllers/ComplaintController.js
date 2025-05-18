@@ -7,16 +7,16 @@ const { sendNotification } = require('./NotificationController'); // Optional: i
 const complaintController = {
   // Create a new complaint
   createComplaint: asyncWrapper(async (req, res, next) => {
-    const { user_id, category_id, agency_id, title, description, attachments } = req.body;
+    const { user_id, agency_id,category, title, description, attachments } = req.body;
 
-    if (!user_id || !category_id || !agency_id || !title || !description) {
+    if (!user_id || !category || !agency_id || !title || !description) {
       return next(new BadRequest('Missing required fields.'));
     }
 
     const complaint = new Complaint({
       user_id,
-      category_id,
       agency_id,
+      category,
       title,
       description,
       attachments: attachments || []
@@ -30,7 +30,7 @@ const complaintController = {
             type: 'complaint'
           }),
           await sendNotification({
-            users: agency_id, // notify both
+            user: agency_id, // notify both
             message: `New Complaint "${description}".`,
             type: 'complaint'
           })
