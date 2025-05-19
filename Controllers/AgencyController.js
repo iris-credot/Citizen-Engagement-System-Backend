@@ -47,21 +47,33 @@ const agencyController = {
   }),
 
   // Update agency by ID
-  updateAgency: asyncWrapper(async (req, res, next) => {
-    const { id } = req.params;
-    const updates = req.body;
+ updateAgency: asyncWrapper(async (req, res, next) => {
+  const { id } = req.params;
+  const updates = req.body;
 
-    const updatedAgency = await Agency.findByIdAndUpdate(id, updates, {
-      new: true,
-      runValidators: true,
-    });
+  // Validate that id exists and is a valid ObjectId string
+  if (!id) {
+    return res.status(400).json({ message: "Agency ID parameter is missing." });
+  }
 
-    if (!updatedAgency) {
-      return next(new NotFound(`No agency found with ID ${id}`));
-    }
+  // Optional: validate ObjectId format if you want, e.g. with mongoose.Types.ObjectId.isValid
+  const mongoose = require("mongoose");
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid Agency ID format." });
+  }
 
-    res.status(200).json({ message: 'Agency updated successfully', agency: updatedAgency });
-  }),
+  // Attempt to update the agency
+  const updatedAgency = await Agency.findByIdAndUpdate(id, updates, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!updatedAgency) {
+    return res.status(404).json({ message: `No agency found with ID ${id}` });
+  }
+
+  res.status(200).json({ message: 'Agency updated successfully', agency: updatedAgency });
+}),
 
   // Delete agency
   deleteAgency: asyncWrapper(async (req, res, next) => {
