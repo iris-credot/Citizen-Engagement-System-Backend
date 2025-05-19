@@ -32,6 +32,14 @@ const userController ={
 
     res.status(200).json({ user });
   }),
+getCitizens: asyncWrapper(async (req, res, next) => {
+  const citizens = await userModel.find({ role: 'citizen' });
+  res.status(200).json({ citizens });
+}),
+getAdmins: asyncWrapper(async (req, res, next) => {
+  const citizens = await userModel.find({ role: 'admin' });
+  res.status(200).json({ citizens });
+}),
 
       createUser: asyncWrapper(async (req, res, next) => {
         const {
