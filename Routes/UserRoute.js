@@ -15,6 +15,8 @@ Userrouter.post('/forgot', authController.ForgotPassword);
 Userrouter.post('/verifyotp', authController.OTP);
 Userrouter.post('/logout', login.logout);
 Userrouter.get('/all' ,auth.superAdminJWT,authController.getAllUsers);
+Userrouter.get('/getallCitiens' ,auth.superAdminJWT,authController.getCitizens);
+Userrouter.get('/getallAdmins' ,auth.superAdminJWT,authController.getAdmins);
 Userrouter.delete('/delete/:id',auth.superAdminJWT, authController.deleteUser);
 Userrouter.put('/profile/:id', auth.AuthJWT,authController.updateUser);
 Userrouter.put('/password', auth.AuthJWT,authController.UpdatePassword);
