@@ -137,7 +137,7 @@ const responseController = {
       .populate('complaint_id');
 
     if (!responses.length) {
-      return next(new NotFound(`No responses found for responder ID ${responderId}`));
+      return next(new NotFound(`No responses found for responder ID ${id}`));
     }
 
     res.status(200).json({ responses });
