@@ -534,6 +534,26 @@
                   }
                 }
               },
+               "/user/getallCitizens": {
+                "get": {
+                  "tags": ["User"],
+                  "summary": "Get all citizens (super admin only)",
+                  "security": [{ "Bearer": [] }],
+                  "responses": {
+                    "200": { "description": "List of complaints" }
+                  }
+                }
+              },
+                "/user/getallAdmins": {
+                "get": {
+                  "tags": ["User"],
+                  "summary": "Get all admins (super admin only)",
+                  "security": [{ "Bearer": [] }],
+                  "responses": {
+                    "200": { "description": "List of complaints" }
+                  }
+                }
+              },
                "/complaint/getCategories": {
                 "get": {
                   "tags": ["Complaint"],
