@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Complaint = require('../Models/ComplaintModel');
 const asyncWrapper = require('../Middleware/async');
 const BadRequest = require('../Error/BadRequest');
@@ -211,18 +212,24 @@ getComplaintsByUser: asyncWrapper(async (req, res, next) => {
 }),
 
   // Get complaints by agency
-  getComplaintsByAgency: asyncWrapper(async (req, res, next) => {
-    const { agencyId } = req.params;
+  
 
-    const complaints = await Complaint.find({ agency_id: agencyId })
-      .populate('user_id');
+getComplaintsByAgency: asyncWrapper(async (req, res, next) => {
+  const { agencyId } = req.params;
 
-    if (!complaints.length) {
-      return next(new NotFound(`No complaints found for agency ID ${agencyId}`));
-    }
+  if (!mongoose.Types.ObjectId.isValid(agencyId)) {
+    return next(new BadRequest('Invalid agencyId'));
+  }
 
-    res.status(200).json({ complaints });
-  })
+  const complaints = await Complaint.find({ agency_id: agencyId }).populate('user_id');
+
+  if (!complaints.length) {
+    return next(new NotFound(`No complaints found for agency ID ${agencyId}`));
+  }
+
+  res.status(200).json({ complaints });
+})
+
 };
 
 module.exports = complaintController;
