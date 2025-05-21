@@ -586,7 +586,7 @@
                   }
                 }
               },
-               "/complaint/getOne/{agencyId}": {
+               "/complaint/getOneAgency/{agencyId}": {
                 "get": {
                   "tags": ["Complaint"],
                   "summary": "Get complaints by agency id",
@@ -641,7 +641,7 @@
                   }
                 }
               },
-              "/complaint/getOne/{id}": {
+              "/complaint/getOneComplaint/{id}": {
                 "get": {
                   "tags": ["Complaint"],
                   "summary": "Get a single complaint by ID",
