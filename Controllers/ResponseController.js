@@ -42,7 +42,7 @@ const responseController = {
     // Optional: Notify the user who created the complaint
     await sendNotification({
       user: complaint.user_id,
-      message: `Your complaint has a new response: "${message}"`,
+      message: `Your complaint has a new response: \n "${message}"`,
       type: 'response'
     });
 

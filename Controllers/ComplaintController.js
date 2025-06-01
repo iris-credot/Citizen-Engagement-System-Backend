@@ -28,7 +28,7 @@ const complaintController = {
     
         await sendNotification({
             user: user_id,
-            message: 'Your complaint has been submitted.',
+            message: `Complaint: ${title}\n Your complaint has been submitted.`,
             type: 'complaint'
           });
     // Optional: Notify agency or user
