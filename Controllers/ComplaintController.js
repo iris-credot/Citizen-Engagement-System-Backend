@@ -28,7 +28,7 @@ const complaintController = {
     
         await sendNotification({
             user: user_id,
-            message: `Complaint: ${title}\n Your complaint has been submitted.`,
+            message: `Complaint: ${title}.\n Your complaint has been submitted successfully.`,
             type: 'complaint'
           });
     // Optional: Notify agency or user
@@ -160,7 +160,7 @@ const complaintController = {
       notifications.push(
         sendNotification({
           user: complaint.user_id._id,
-          message: `Your complaint status has been updated to "${status}".`,
+          message: `Complaint: ${title}.\nThe status has been updated to "${status}".`,
           type: 'complaint',
         })
       );
