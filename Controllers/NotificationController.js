@@ -40,6 +40,16 @@ const notificationController = {
     const notifications = await Notification.find().populate('user_id');
     res.status(200).json({ notifications });
   }),
+    deleteNotification: asyncWrapper(async (req, res, next) => {
+    const { id } = req.params;
+
+    const deleted = await Notification.findByIdAndDelete(id);
+    if (!deleted) {
+      return next(new NotFound(`No notification found with ID ${id}`));
+    }
+
+    res.status(200).json({ message: 'Notification deleted successfully.' });
+  }),
 
  getNotificationsByUser: asyncWrapper(async (req, res, next) => {
   const { id } = req.params;
