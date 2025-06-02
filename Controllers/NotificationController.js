@@ -66,7 +66,7 @@ const notificationController = {
 }),
  getNotificationsByAgency: asyncWrapper(async (req, res, next) => {
   const { id } = req.params;
-  const notifications = await Notification.find({ _id: id });
+  const notifications = await Notification.find({ agency_id: id });
 
   // Return 200 OK with empty array if no notifications
   res.status(200).json({ notifications });
