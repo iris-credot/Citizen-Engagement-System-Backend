@@ -8,8 +8,7 @@ const notificationSchema = new mongoose.Schema({
   },
     agency_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Agency',
-    required: [true, 'Agency ID is required']
+    ref: 'Agency'
   },
   message: {
     type: String,
