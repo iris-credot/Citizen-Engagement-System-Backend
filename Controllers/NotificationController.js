@@ -10,13 +10,18 @@ const sendNotification = async ({ user, message, type }) => {
     throw new BadRequest('User and message are required.');
   }
 
-  // Try to find user in User collection
   let userData = await User.findById(user);
+
+  // If not found by ID, try to find the user with agency_id field
+  if (!userData) {
+    userData = await User.findOne({ agency_id: user });
+  }
+
   if (!userData || !userData.email) {
     throw new NotFound('User or email not found.');
   }
 
-  const notification = new Notification({ user_id: user, message, type });
+  const notification = new Notification({ user_id: userData._id, message, type });
 
   try {
     await sendEmail(
@@ -24,7 +29,6 @@ const sendNotification = async ({ user, message, type }) => {
       `New ${type} notification`,
       `<p>${message}</p>`
     );
-
     notification.status = 'sent';
   } catch (error) {
     notification.status = 'failed';
@@ -34,6 +38,7 @@ const sendNotification = async ({ user, message, type }) => {
   await notification.save();
   return notification;
 };
+
 
 // Other controller methods
 const notificationController = {
@@ -61,7 +66,7 @@ const notificationController = {
 }),
  getNotificationsByAgency: asyncWrapper(async (req, res, next) => {
   const { id } = req.params;
-  const notifications = await Notification.find({ agency_id: id });
+  const notifications = await Notification.find({ _id: id });
 
   // Return 200 OK with empty array if no notifications
   res.status(200).json({ notifications });
