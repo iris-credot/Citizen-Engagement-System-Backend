@@ -10,7 +10,8 @@ const sendNotification = async ({ user, message, type }) => {
     throw new BadRequest('User and message are required.');
   }
 
-  const userData = await User.findById(user);
+  // Try to find user in User collection
+  let userData = await User.findById(user);
   if (!userData || !userData.email) {
     throw new NotFound('User or email not found.');
   }
