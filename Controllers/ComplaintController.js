@@ -7,43 +7,40 @@ const { sendNotification } = require('./NotificationController'); // Optional: i
 
 const complaintController = {
   // Create a new complaint
-// Create a new complaint
-createComplaint: asyncWrapper(async (req, res, next) => {
-  const user_id = req.userId;
-  const { agency_id, category, title, description, attachments } = req.body;
+  createComplaint: asyncWrapper(async (req, res, next) => {
+    const user_id = req.userId;
+    const { agency_id,category, title, description, attachments } = req.body;
 
-  if (!user_id || !category || !agency_id || !title || !description) {
-    return next(new BadRequest('Missing required fields.'));
-  }
+    if (!user_id || !category || !agency_id || !title || !description) {
+      return next(new BadRequest('Missing required fields.'));
+    }
 
-  const complaint = new Complaint({
-    user_id,
-    agency_id,
-    category,
-    title,
-    description,
-    attachments: attachments || []
-  });
+    const complaint = new Complaint({
+      user_id,
+      agency_id,
+      category,
+      title,
+      description,
+      attachments: attachments || []
+    });
 
-  const savedComplaint = await complaint.save();
+    const savedComplaint = await complaint.save();
+    
+        await sendNotification({
+            user: user_id,
+            message: `Complaint: ${title} has been submitted successfully.`,
+            type: 'complaint'
+          });
+                  await sendNotification({
+            user: agency_id,
+            message: `A new complaint has been made ${title}.`,
+            type: 'complaint'
+          });
+    // Optional: Notify agency or user
+  
 
-  // Send notification to user and agency
-  await sendNotification({
-    user_id,
-    agency_id,
-    message: `Complaint: "${title}" has been submitted successfully.`,
-    type: 'complaint'
-  });
-
-  await sendNotification({
-    user_id,       // The user_id here should be the agency's user id or agency id?
-    agency_id,
-    message: `A new complaint titled "${title}" has been made.`,
-    type: 'complaint'
-  });
-
-  res.status(201).json({ message: 'Complaint created successfully', complaint: savedComplaint });
-}),
+    res.status(201).json({ message: 'Complaint created successfully', complaint: savedComplaint });
+  }),
 
   // Get all complaints
   getAllComplaints: asyncWrapper(async (req, res, next) => {

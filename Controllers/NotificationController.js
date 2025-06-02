@@ -5,45 +5,30 @@ const NotFound = require('../Error/NotFound');
 const User = require('../Models/UserModel'); // Assuming user has an email field
 const sendEmail = require('../Middleware/sendMail'); // A utility to send email
 
-const sendNotification = async ({ user_id, agency_id, message, type }) => {
-  if (!user_id || !message || !agency_id) {
-    throw new BadRequest('User ID, agency ID, and message are required.');
+const sendNotification = async ({ user, message, type }) => {
+  if (!user || !message) {
+    throw new BadRequest('User and message are required.');
   }
 
-  // Fetch user and agency data
-  const userData = await User.findById(user_id);
-  const agencyData = await Agency.findById(agency_id);
+  let userData = await User.findById(user);
+
+  // If not found by ID, try to find the user with agency_id field
+  if (!userData) {
+    userData = await User.findOne({ agency_id: user });
+  }
 
   if (!userData || !userData.email) {
-    throw new NotFound('User or user email not found.');
+    throw new NotFound('User or email not found.');
   }
 
-  if (!agencyData || !agencyData.email) {
-    throw new NotFound('Agency or agency email not found.');
-  }
-
-  const notification = new Notification({
-    user_id: userData._id,
-    agency_id: agencyData._id,
-    message,
-    type,
-  });
+  const notification = new Notification({ user_id: userData._id, message, type });
 
   try {
-    // Send email to user
     await sendEmail(
       userData.email,
       `New ${type} notification`,
       `<p>${message}</p>`
     );
-
-    // Send email to agency
-    await sendEmail(
-      agencyData.email,
-      `New ${type} notification`,
-      `<p>${message}</p>`
-    );
-
     notification.status = 'sent';
   } catch (error) {
     notification.status = 'failed';
@@ -53,7 +38,6 @@ const sendNotification = async ({ user_id, agency_id, message, type }) => {
   await notification.save();
   return notification;
 };
-
 
 
 // Other controller methods
