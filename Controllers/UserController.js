@@ -27,7 +27,7 @@ const userController ={
       .populate('agency_id');
 
     if (!user) {
-      return next(new NotFound(`No user found with ID ${id}`));
+      return next(new Notfound('User not found'));
     }
 
     res.status(200).json({ user });
