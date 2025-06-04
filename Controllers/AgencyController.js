@@ -30,7 +30,7 @@ const agencyController = {
 
   // Get all agencies
 getAllAgencies: asyncWrapper(async (req, res) => {
-  const agencies = await Agency.find({}, { name: 1 }).sort({ createdAt: -1 });
+  const agencies = await Agency.find({});
   res.status(200).json({ agencies });
 }),
 
