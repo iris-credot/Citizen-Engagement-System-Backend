@@ -29,11 +29,10 @@ const agencyController = {
   }),
 
   // Get all agencies
-getAllAgencies: asyncWrapper(async (req, res) => {
-  const agencies = await Agency.find({}, { name: 1 }).sort({ createdAt: -1 });
-  res.status(200).json({ agencies });
-}),
-
+  getAllAgencies: asyncWrapper(async (req, res) => {
+    const agencies = await Agency.find() .populate('agency_id', 'name') .sort({ createdAt: -1 });
+    res.status(200).json({ agencies });
+  }),
 
   // Get single agency by ID
   getAgencyById: asyncWrapper(async (req, res, next) => {
