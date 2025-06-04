@@ -37,7 +37,7 @@ getCitizens: asyncWrapper(async (req, res, next) => {
   res.status(200).json({ citizens });
 }),
 getAdmins: asyncWrapper(async (req, res, next) => {
-  const citizens = await userModel.find({ role: 'admin' });
+  const citizens = await userModel.find({ role: 'admin' }).populate('agency_id', 'name')  .sort({ createdAt: -1 });;
   res.status(200).json({ citizens });
 }),
 
