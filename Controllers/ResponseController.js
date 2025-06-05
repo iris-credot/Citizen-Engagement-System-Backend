@@ -37,6 +37,7 @@ const responseController = {
       message
     });
          complaint.status = 'resolved';
+         await complaint.save();
     const savedResponse = await response.save();
 
     // Optional: Notify the user who created the complaint
