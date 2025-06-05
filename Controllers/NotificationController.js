@@ -17,9 +17,7 @@ const sendNotification = async ({ user, message, type }) => {
     userData = await User.findOne({ agency_id: user });
   }
 
-  if (!userData || !userData.email) {
-    throw new NotFound('User or email not found.');
-  }
+ 
 
   const notification = new Notification({ user_id: userData._id, message, type });
 
