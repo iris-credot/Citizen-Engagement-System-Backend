@@ -165,7 +165,7 @@ const complaintController = {
       notifications.push(
         sendNotification({
           user: complaint.user_id._id,
-          message: `Complaint: ${title} has been updated to "${status}".`,
+          message: `Complaint has been updated to ${status}.`,
           type: 'complaint',
         })
       );
