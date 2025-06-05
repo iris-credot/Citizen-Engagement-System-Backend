@@ -21,6 +21,6 @@ Userrouter.delete('/delete/:id',auth.superAdminJWT, authController.deleteUser);
 Userrouter.put('/profile/:id', auth.AuthJWT,authController.updateUser);
 Userrouter.put('/password', auth.AuthJWT,authController.UpdatePassword);
 Userrouter.post('/resetpassword/:token', authController.ResetPassword);
-Userrouter.get('/getOne/:id', auth.BothJWT,authController.getUserById);
+Userrouter.get('/getOne/:id', auth.AuthJWT,authController.getUserById);
 
 module.exports = Userrouter;
