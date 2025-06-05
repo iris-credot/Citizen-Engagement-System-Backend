@@ -26,16 +26,28 @@ const complaintController = {
 
     const savedComplaint = await complaint.save();
     
-        await sendNotification({
-            user: user_id?.toString(),
-            message: `Complaint: ${title} has been submitted successfully.`,
-            type: 'complaint'
-          });
-                  await sendNotification({
-            user: agency_id?.toString(),
-            message: `A new complaint has been made ${title}.`,
-            type: 'complaint'
-          });
+     try {
+  await sendNotification({
+    user: user_id?.toString(),
+    message: `Complaint: ${title} has been submitted successfully.`,
+    type: 'complaint'
+  });
+} catch (err) {
+  console.warn('User notification failed silently:', err.message);
+  // Do not throw or return this error to frontend
+}
+
+// Send notification to agency - safely
+try {
+  await sendNotification({
+    user: agency_id?.toString(),
+    message: `A new complaint has been made ${title}.`,
+    type: 'complaint'
+  });
+} catch (err) {
+  console.warn('Agency notification failed silently:', err.message);
+  // Again, do not rethrow
+}
     // Optional: Notify agency or user
   
 
