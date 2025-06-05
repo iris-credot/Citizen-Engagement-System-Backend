@@ -10,6 +10,7 @@ Responserouter.put('/update/:id', auth.BothJWT, responseController.updateRespons
 Responserouter.delete('/delete/:id', auth.BothJWT, responseController.deleteResponse);
 Responserouter.get('/byComplaint/:id', auth.AuthJWT, responseController.getResponsesByComplaint);
 Responserouter.get('/byResponser/:id', auth.AuthJWT, responseController.getResponsesByResponder);
+Responserouter.get('/byComplainer/:id', auth.AuthJWT, responseController.getResponsesByComplainer);
 
 
 module.exports = Responserouter;

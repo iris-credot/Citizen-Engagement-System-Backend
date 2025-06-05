@@ -4,22 +4,38 @@ const BadRequest = require('../Error/BadRequest');
 const NotFound = require('../Error/NotFound');
 const User = require('../Models/UserModel'); // Assuming user has an email field
 const sendEmail = require('../Middleware/sendMail'); // A utility to send email
-
 const sendNotification = async ({ user, message, type }) => {
   if (!user || !message) {
     throw new BadRequest('User and message are required.');
   }
 
-  let userData = await User.findById(user);
+  let userData = null;
 
-  // If not found by ID, try to find the user with agency_id field
+  // Try to find by _id
+  if (typeof user === 'string' || typeof user === 'object') {
+    try {
+      userData = await User.findById(user);
+    } catch (err) {
+      console.warn('Invalid ObjectId format for user:', user);
+    }
+  }
+
+  // If not found by _id, try to find by agency_id
   if (!userData) {
     userData = await User.findOne({ agency_id: user });
   }
 
- 
+  // If still not found, exit gracefully
+  if (!userData || !userData.email) {
+    console.error('User not found for notification. Input user:', user);
+    throw new NotFound('User or email not found for sending notification.');
+  }
 
-  const notification = new Notification({ user_id: userData._id, message, type });
+  const notification = new Notification({
+    user_id: userData._id,
+    message,
+    type,
+  });
 
   try {
     await sendEmail(
@@ -36,6 +52,7 @@ const sendNotification = async ({ user, message, type }) => {
   await notification.save();
   return notification;
 };
+
 
 
 // Other controller methods

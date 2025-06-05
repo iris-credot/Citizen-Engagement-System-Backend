@@ -140,7 +140,33 @@ const responseController = {
    
 
     res.status(200).json({ responses });
-  })
+  }),
+  // Get responses for all complaints created by a specific user (complainer)
+getResponsesByComplainer: asyncWrapper(async (req, res, next) => {
+  const { id } = req.params; // this is the user ID of the complainer
+
+  // Step 1: Get all complaints made by this user
+  const complaints = await Complaint.find({ user_id: id });
+
+  if (!complaints.length) {
+    return next(new NotFound(`No complaints found for user ID ${id}`));
+  }
+
+  // Step 2: Extract complaint IDs
+  const complaintIds = complaints.map((comp) => comp._id);
+
+  // Step 3: Get all responses for those complaints
+  const responses = await Response.find({ complaint_id: { $in: complaintIds } })
+    .populate('responder_id', '-password')
+    .populate('complaint_id');
+
+  if (!responses.length) {
+    return next(new NotFound(`No responses found for user ID ${id}`));
+  }
+
+  res.status(200).json({ responses });
+})
+
 };
 
 module.exports = responseController;
