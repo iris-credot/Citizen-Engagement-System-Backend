@@ -4,7 +4,7 @@ const notificationSchema = new mongoose.Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: [true, 'User ID is required']
+   
   },
     agency_id: {
     type: mongoose.Schema.Types.ObjectId,

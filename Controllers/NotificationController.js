@@ -6,7 +6,8 @@ const User = require('../Models/UserModel'); // Assuming user has an email field
 const sendEmail = require('../Middleware/sendMail'); // A utility to send email
 const sendNotification = async ({ user, message, type }) => {
   if (!user || !message) {
-    throw new BadRequest('User and message are required.');
+    console.warn('Notification skipped: user or message missing.', { user, message });
+    return; // Exit silently
   }
 
   let userData = null;
@@ -25,10 +26,10 @@ const sendNotification = async ({ user, message, type }) => {
     userData = await User.findOne({ agency_id: user });
   }
 
-  // If still not found, exit gracefully
+  // If still not found, skip notification
   if (!userData || !userData.email) {
-    console.error('User not found for notification. Input user:', user);
-    throw new NotFound('User or email not found for sending notification.');
+    console.warn('Notification skipped: user or email not found.', { input: user });
+    return;
   }
 
   const notification = new Notification({
@@ -52,6 +53,7 @@ const sendNotification = async ({ user, message, type }) => {
   await notification.save();
   return notification;
 };
+
 
 
 
