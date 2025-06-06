@@ -240,12 +240,10 @@ getComplaintsByAgency: asyncWrapper(async (req, res, next) => {
 
   const complaints = await Complaint.find({ agency_id: agencyId }).populate('user_id');
 
-  if (!complaints.length) {
-    return next(new NotFound(`No complaints found for agency ID ${agencyId}`));
-  }
-
-  res.status(200).json({ complaints });
+  // Return 200 with an empty array if no complaints
+  return res.status(200).json({ complaints });
 })
+
 
 };
 
